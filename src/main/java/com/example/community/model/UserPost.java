@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -26,55 +27,57 @@ import java.util.Date;
 public class UserPost implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postID;
-    @NotBlank
-    private int postState;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long postId;
+    @NotNull
+    private int postPrivacy;
     @NotBlank
     private String content;
     @NotBlank
-    private String posterID;
+    private String posterId;
     @NotBlank
     private String posterName;
     
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date postDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date updatedAt;
     
+    @Column(nullable = false)
     private int votesUp;
+    @Column(nullable = false)
     private int votesDown;
     public void setPosterName(String postername){
         this.posterName=postername;
     }
     public void setPosterID(String posterid){
-        this.posterID=posterid;
+        this.posterId=posterid;
     }
     public void setContent(String message){
         this.content=message;
     }
     public void setState(int privacy){
-        this.postState = privacy;        
+        this.postPrivacy = privacy;        
     }
     public String getPosterName(){
         return this.posterName;
     }
     public String getPosterID(){
-        return this.posterID;
+        return this.posterId;
     }
     public String getContent(){
         return this.content;
     }
     public int getState(){
-        return this.postState;
+        return this.postPrivacy;
     }
     public Long getID(){
-        return this.postID;
+        return this.postId;
     }
     public int getVotesUp(){
         return this.votesUp;
