@@ -7,12 +7,9 @@ package com.example.community.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,21 +34,12 @@ public class UserPost implements Serializable{
     private String posterId;
     @NotBlank
     private String posterName;
-    
-    @Column(nullable = false, updatable = false, columnDefinition="DATETIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date postDate;
-
-    @Column(nullable = false, columnDefinition="DATETIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
-    
+     
     @Column(nullable = false)
     private int votesUp;
     @Column(nullable = false)
     private int votesDown;
+    
     public void setPosterName(String postername){
         this.posterName=postername;
     }
@@ -61,9 +49,10 @@ public class UserPost implements Serializable{
     public void setContent(String message){
         this.content=message;
     }
-    public void setState(int privacy){
+    public void setPostPrivacy(int privacy){
         this.postPrivacy = privacy;        
     }
+    
     public String getPosterName(){
         return this.posterName;
     }
@@ -73,7 +62,7 @@ public class UserPost implements Serializable{
     public String getContent(){
         return this.content;
     }
-    public int getState(){
+    public int getPostPrivacy(){
         return this.postPrivacy;
     }
     public Long getID(){
@@ -84,11 +73,5 @@ public class UserPost implements Serializable{
     }
     public int getVotesDown(){
         return this.votesDown;
-    }
-    public Date getUpdateDate(){
-        return this.updatedAt; 
-    }
-    public Date getPostDate(){
-        return this.postDate; 
     }
 }
