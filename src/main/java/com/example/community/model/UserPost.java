@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "post")
+@SecondaryTable(name = "comments", pkJoinColumns = @PrimaryKeyJoinColumn(name = "post_id"))
+@SecondaryTable(name = "votes", pkJoinColumns = @PrimaryKeyJoinColumn(name = "post_id"))
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 
@@ -51,6 +53,14 @@ public class UserPost implements Serializable{
     }
     public void setPostPrivacy(int privacy){
         this.postPrivacy = privacy;        
+    }
+    public void setvote(int voice){
+        if (voice==1){
+            this.votesUp++;
+        }
+        else if (voice ==0){
+            this.votesDown++;
+        }
     }
     
     public String getPosterName(){

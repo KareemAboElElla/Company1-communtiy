@@ -7,6 +7,7 @@ package com.example.community.repository;
 
 import com.example.community.model.UserPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 /**
  *
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface UserPostRepository extends JpaRepository<UserPost, Long> {
+public interface UserPostRepository extends JpaRepository<UserPost, Long>,JpaSpecificationExecutor {
     
     
     

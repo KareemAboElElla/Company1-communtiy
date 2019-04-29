@@ -48,6 +48,15 @@ public class UserPostController {
         }
         return null;
     }
+    @PutMapping("/{postid,vote}")
+        public UserPost VoteToPost(@PathVariable(value = "postid") Long postId,@PathVariable(value = "vote") int vote, @Valid @RequestBody UserPost postDetails) {
+            UserPost post = userPostRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+            post.setvote(vote);
+            UserPost updatedNote = userPostRepo.save(post);
+            return updatedNote;
+        }
+
+    
     @DeleteMapping("/{postid,userid}")
     public ResponseEntity<?> deletepost(@PathVariable(value = "postid") Long postId,@PathVariable(value = "userid") Long userId) {
         UserPost post = userPostRepo.findById(postId)

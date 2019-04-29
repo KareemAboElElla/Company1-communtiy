@@ -12,6 +12,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "vacancy")
+@SecondaryTable(name = "comments", pkJoinColumns = @PrimaryKeyJoinColumn(name = "vacancy_id"))
+@SecondaryTable(name = "votes", pkJoinColumns = @PrimaryKeyJoinColumn(name = "vacancy_id"))
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 
@@ -19,13 +21,13 @@ public class Vacancy implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postID;
+    private Long vacancyId;
     @NotBlank
     private String descreption;
     @NotBlank
-    private String posterID;
+    private String companyId;
     @NotBlank
-    private String posterName;
+    private String companyName;
     @NotBlank
     private String title;
     @NotBlank
@@ -38,23 +40,14 @@ public class Vacancy implements Serializable{
     private int salary;
     @NotNull
     private int appid;
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date postDate;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
 
     private int votesUp;
     private int votesDown;
     public void setPosterName(String postername){
-        this.posterName=postername;
+        this.companyName=postername;
     }
     public void setPosterID(String posterid){
-        this.posterID=posterid;
+        this.companyId=posterid;
     }
     public void setDescreption(String message){
         this.descreption=message;
@@ -85,17 +78,17 @@ public class Vacancy implements Serializable{
         return this.requirments;
     }
     public String getPosterName(){
-        return this.posterName;
+        return this.companyName;
     }
     public String getPosterID(){
-        return this.posterID;
+        return this.companyId;
     }
     public String getDescreption(){
         return this.descreption;
     }
     public String getTitle(){ return this.title; }
     public Long getID(){
-        return this.postID;
+        return this.vacancyId;
     }
     public int getVotesUp(){
         return this.votesUp;
@@ -103,11 +96,13 @@ public class Vacancy implements Serializable{
     public int getVotesDown(){
         return this.votesDown;
     }
-    public Date getUpdateDate(){
-        return this.updatedAt;
-    }
-    public Date getPostDate(){
-        return this.postDate;
+    public void setvote(int voice){
+        if (voice==1){
+            this.votesUp++;
+        }
+        else if (voice ==0){
+            this.votesDown++;
+        }
     }
 }
 
