@@ -29,28 +29,34 @@ public class UserPostController {
         return userPostRepo.findAll();
     }
     @PostMapping("/add")
-    public UserPost createNote(@Valid @RequestBody UserPost post) {
+    public UserPost createPost(@Valid @RequestBody UserPost post) {
         return userPostRepo.save(post);
     }
-    // Get a Single Note
+
     @GetMapping("/search/{userID,postID}")
     public UserPost getUserPostById(@PathVariable(value = "postID") Long postId,@PathVariable(value = "userID") Long userId) {
         return userPostRepo.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
     }
-    @PutMapping("/{postid}")
-    public UserPost updateNote(@PathVariable(value = "postid") Long postId, @Valid @RequestBody UserPost postDetails) {
+    @PutMapping("/{postid,userID}")
+    public UserPost updatePost(@PathVariable(value = "postid") Long postId,@PathVariable(value = "userID") Long userId, @Valid @RequestBody UserPost postDetails) {
         UserPost post = userPostRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
         post.setContent(postDetails.getContent());
-        UserPost updatedNote = userPostRepo.save(post);
-        return updatedNote;
+        if (post.getPosterID().equals(userId)){
+            UserPost updatedNote = userPostRepo.save(post);
+            return updatedNote;
+        }
+        return null;
     }
     @DeleteMapping("/{postid,userid}")
     public ResponseEntity<?> deletepost(@PathVariable(value = "postid") Long postId,@PathVariable(value = "userid") Long userId) {
         UserPost post = userPostRepo.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
-        userPostRepo.delete(post);
-    return ResponseEntity.ok().build();
+        if (post.getPosterID().equals(userId)){
+            userPostRepo.delete(post);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
     
 }
