@@ -1,21 +1,19 @@
 package com.example.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import java.util.ArrayList;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
 
 @Entity
 @Table(name = "vacancy")
 @SecondaryTable(name = "comments", pkJoinColumns = @PrimaryKeyJoinColumn(name = "vacancy_id"))
 @SecondaryTable(name = "votes", pkJoinColumns = @PrimaryKeyJoinColumn(name = "vacancy_id"))
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 
 public class Vacancy implements Serializable{
 
@@ -43,6 +41,9 @@ public class Vacancy implements Serializable{
 
     private int votesUp;
     private int votesDown;
+    @JsonInclude()
+    @Transient
+    private ArrayList<Comment> myComments;
     public void setPosterName(String postername){
         this.companyName=postername;
     }
@@ -96,13 +97,24 @@ public class Vacancy implements Serializable{
     public int getVotesDown(){
         return this.votesDown;
     }
-    public void setvote(int voice){
+    public void setvote(int voice,int type){
         if (voice==1){
             this.votesUp++;
+            if (type==0)
+                this.votesDown--;
         }
         else if (voice ==0){
             this.votesDown++;
+            if (type==0)
+                this.votesUp--;
         }
+    }
+    public void setComments(ArrayList <Comment> newComments){
+        for (Comment x :newComments)
+            this.myComments.add(x);
+    }
+    public ArrayList <Comment> getMyComments(){
+        return this.myComments;
     }
 }
 
