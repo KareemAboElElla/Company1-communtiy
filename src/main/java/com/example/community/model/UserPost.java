@@ -5,8 +5,10 @@
  */
 package com.example.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import java.util.ArrayList;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,8 +21,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "post")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-
 public class UserPost implements Serializable{
     
     @Id
@@ -34,7 +34,9 @@ public class UserPost implements Serializable{
     private String posterId;
     @NotBlank
     private String posterName;
-     
+    @JsonInclude()
+    @Transient
+    private ArrayList<Comment> myComments;
     @Column(nullable = false)
     private int votesUp;
     @Column(nullable = false)
@@ -51,6 +53,18 @@ public class UserPost implements Serializable{
     }
     public void setPostPrivacy(int privacy){
         this.postPrivacy = privacy;        
+    }
+    public void setvote(int voice,int type){
+        if (voice==1){
+            this.votesUp++;
+            if (type==0)
+                this.votesDown--;
+        }
+        else if (voice ==0){
+            this.votesDown++;
+            if (type==0)
+                this.votesUp--;
+        }
     }
     
     public String getPosterName(){
@@ -73,5 +87,12 @@ public class UserPost implements Serializable{
     }
     public int getVotesDown(){
         return this.votesDown;
+    }
+    public void setComments(ArrayList <Comment> newComments){
+        for (Comment x :newComments)
+            this.myComments.add(x);
+    }
+    public ArrayList <Comment> getMyComments(){
+        return this.myComments;
     }
 }
